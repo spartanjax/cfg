@@ -11,6 +11,7 @@ attributes:
 | Source path                                    | Becomes                                        |
 | ---------------------------------------------- | ---------------------------------------------- |
 | `dot_config/opencode/opencode.json`            | `~/.config/opencode/opencode.json`             |
+| `dot_config/opencode/AGENTS.md`                | `~/.config/opencode/AGENTS.md` (global instructions) |
 | `dot_config/opencode/agents/*.md`              | `~/.config/opencode/agents/*.md`               |
 | `dot_config/opencode/encrypted_service.json.age` | `~/.config/opencode/service.json` (decrypted)  |
 | `dot_gitconfig.tmpl`                           | `~/.gitconfig` (templated)                     |
