@@ -1,7 +1,7 @@
 # jf-config
 
-My dotfiles, managed with [chezmoi](https://chezmoi.io), across **Windows** and
-**WSL**. One source of truth, applied to every machine.
+My dotfiles, managed with [chezmoi](https://chezmoi.io), across **Windows**,
+**WSL/Linux** and **macOS**. One source of truth, applied to every machine.
 
 ## Layout
 
@@ -14,12 +14,17 @@ attributes:
 | `dot_config/opencode/agents/*.md`              | `~/.config/opencode/agents/*.md`               |
 | `dot_config/opencode/encrypted_service.json.age` | `~/.config/opencode/service.json` (decrypted)  |
 | `dot_gitconfig.tmpl`                           | `~/.gitconfig` (templated)                     |
-| `dot_local/bin/executable_jf-*`                | `~/.local/bin/jf-*` (Linux/WSL only)           |
+| `dot_bashrc`                                   | `~/.bashrc` (Linux/WSL only)                   |
+| `dot_zshrc`                                    | `~/.zshrc` (macOS only)                        |
+| `dot_tmux.conf`                                | `~/.tmux.conf` (Linux/WSL + macOS)             |
+| `dot_local/bin/executable_jf-*`                | `~/.local/bin/jf-*` (Linux/WSL + macOS)        |
+| `Brewfile`                                     | *not applied* — macOS package list             |
 
 - `dot_` prefix → leading dot in the destination path.
 - `executable_` prefix → destination is made executable.
 - `.tmpl` suffix → rendered as a Go template.
 - `encrypted_….age` → stored age-encrypted, decrypted on apply.
+- `run_*` scripts → executed by `chezmoi apply` (see *Packages*).
 
 ## Commands
 
@@ -32,15 +37,39 @@ attributes:
 Day-to-day: edit a file (`chezmoi edit ~/.gitconfig`), then `jf-push`. On another
 machine, `jf-pull`.
 
+## Packages
+
+Installed by scripts that `chezmoi apply` runs (skipped on Windows):
+
+| Script                                          | Machine   | Does                                |
+| ----------------------------------------------- | --------- | ----------------------------------- |
+| `run_once_before_install-homebrew.sh.tmpl`      | macOS     | installs Homebrew if missing        |
+| `run_onchange_before_install-packages.sh.tmpl`  | macOS     | `brew bundle` from `Brewfile`       |
+| `run_onchange_before_install-packages.sh.tmpl`  | Linux/WSL | `apt-get install` the CLI set       |
+| `run_onchange_after_tpm-install.sh.tmpl`        | both      | installs TPM + tmux plugins         |
+
+`run_onchange_` re-runs only when its content changes — so **edit the package
+list** (or the `Brewfile`) and the next `jf-config`/`jf-pull` reinstalls.
+`run_once_` runs a single time. To force a re-run:
+
+```
+chezmoi state delete-bucket --bucket=entryState    # run_onchange_
+chezmoi state delete-bucket --bucket=scriptState   # run_once_
+```
+
 ## New machine
 
-1. Install chezmoi — Windows `winget install twpayne.chezmoi`,
-   Linux/WSL `sh -c "$(curl -fsSL get.chezmoi.io)" -- -b "$HOME/.local/bin"`.
-2. Restore your age identity to `~/.config/chezmoi/key.txt` (see *Secrets*).
-3. Apply:
+1. Install chezmoi — Windows `winget install twpayne.chezmoi`; Linux/WSL/macOS
+   `sh -c "$(curl -fsSL get.chezmoi.io)" -- -b "$HOME/.local/bin"`.
+2. Restore your age identity to `~/.config/chezmoi/key.txt` (see *Secrets*), and
+   your SSH key if you want git-over-SSH.
+3. Apply (this also installs packages and tmux plugins):
    ```
    chezmoi init --apply --ssh git@github.com:spartanjax/jf-config.git
    ```
+
+Per-OS behaviour is driven by templates and `.chezmoiignore`: `~/.bashrc` only on
+Linux/WSL, `~/.zshrc` only on macOS, Windows Terminal settings only on Windows.
 
 ## Secrets
 
@@ -57,3 +86,12 @@ recipient is public and lives in `.chezmoi.toml.tmpl`. The private identity is
 `~/.config/chezmoi/chezmoi.toml` is generated on each machine and holds that
 machine's `[data]` (name/email, etc.). Edit it locally to differ from the
 defaults — it is not part of the repo.
+
+## Editing notes
+
+- **Windows Terminal** rewrites its `settings.json` when you change settings in
+  the UI. After a UI change run `chezmoi re-add` then `jf-push` to capture it;
+  otherwise `jf-config` will overwrite it with the repo version.
+- **Shell rc files** are copied (not symlinked). `~/.bashrc` was captured from
+  the original; the repo version adds `~/.local/bin` to `PATH` and `fd`/`bat`
+  aliases.

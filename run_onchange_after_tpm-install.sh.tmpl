@@ -1,0 +1,12 @@
+{{ if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") -}}
+#!/bin/sh
+# Install tmux plugin manager (TPM) and its plugins.
+TPM="$HOME/.tmux/plugins/tpm"
+if [ ! -d "$TPM" ]; then
+    git clone --depth 1 https://github.com/tmux-plugins/tpm "$TPM"
+fi
+# TPM reads the plugin dir from tmux's global environment; set it explicitly
+# so headless installs work (normally set when tmux loads ~/.tmux.conf).
+tmux start-server \; set-environment -g TMUX_PLUGIN_MANAGER_PATH "$HOME/.tmux/plugins/" 2>/dev/null || true
+"$TPM/bin/install_plugins" || true
+{{ end -}}

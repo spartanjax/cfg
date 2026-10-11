@@ -2,13 +2,25 @@
 README.md
 .gitattributes
 .gitignore
+Brewfile
 
 {{ if eq .chezmoi.os "windows" }}
-# POSIX shell wrappers: only apply them on Linux/WSL.
+# POSIX scripts/wrappers and tmux: only apply on Linux/WSL/macOS.
 .local/bin/jf-config
 .local/bin/jf-pull
 .local/bin/jf-push
+.tmux.conf
 {{ else }}
 # Windows-only configs.
 AppData
+{{ end }}
+
+{{ if ne .chezmoi.os "darwin" }}
+# zsh config is macOS-only.
+.zshrc
+{{ end }}
+
+{{ if ne .chezmoi.os "linux" }}
+# bash config is Linux/WSL-only.
+.bashrc
 {{ end }}
