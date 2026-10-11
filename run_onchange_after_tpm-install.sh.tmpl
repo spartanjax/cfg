@@ -1,6 +1,8 @@
 {{ if or (eq .chezmoi.os "darwin") (eq .chezmoi.os "linux") -}}
 #!/bin/sh
 # Install tmux plugin manager (TPM) and its plugins.
+# Re-runs whenever dot_tmux.conf changes (plugin list lives there).
+# dot_tmux.conf hash: {{ include "dot_tmux.conf" | sha256sum }}
 TPM="$HOME/.tmux/plugins/tpm"
 if [ ! -d "$TPM" ]; then
     git clone --depth 1 https://github.com/tmux-plugins/tpm "$TPM"

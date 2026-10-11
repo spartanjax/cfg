@@ -56,6 +56,10 @@ Installed by scripts that `chezmoi apply` runs (skipped on Windows):
 | `run_onchange_before_install-packages.sh.tmpl`  | Linux/WSL | `apt-get install` the CLI set       |
 | `run_onchange_after_tpm-install.sh.tmpl`        | both      | installs TPM + tmux plugins         |
 
+The tmux bar is themed with
+[tokyo-night-tmux](https://github.com/janoamaral/tokyo-night-tmux) and includes
+tmux-resurrect / continuum / yank / fzf — all configured in `dot_tmux.conf`.
+
 `run_onchange_` re-runs only when its content changes — so **edit the package
 list** (or the `Brewfile`) and the next `jf-config`/`jf-pull` reinstalls.
 `run_once_` runs a single time. To force a re-run:
@@ -64,6 +68,18 @@ list** (or the `Brewfile`) and the next `jf-config`/`jf-pull` reinstalls.
 chezmoi state delete-bucket --bucket=entryState    # run_onchange_
 chezmoi state delete-bucket --bucket=scriptState   # run_once_
 ```
+
+## Terminal appearance (fonts)
+
+The tmux bar and the Windows Terminal scheme draw **Nerd Font** glyphs. Install
+[JetBrainsMono Nerd Font](https://www.nerdfonts.com/) (v3+) once per machine:
+
+- **Windows:** `winget install DEVCOM.JetBrainsMonoNerdFont`
+- **macOS:** `brew install --cask font-jetbrains-mono-nerd-font`
+
+Windows Terminal already points at `JetBrainsMono Nerd Font` and the `Tokyo
+Night` scheme (both in the managed `settings.json`). The font is a system
+install, so chezmoi does not manage it.
 
 ## New machine
 
@@ -75,6 +91,7 @@ chezmoi state delete-bucket --bucket=scriptState   # run_once_
    ```
    chezmoi init --apply --ssh git@github.com:spartanjax/jf-config.git
    ```
+4. Install the Nerd Font (see *Terminal appearance* above).
 
 Per-OS behaviour is driven by templates and `.chezmoiignore`: `~/.bashrc` only on
 Linux/WSL, `~/.zshrc` only on macOS, Windows Terminal settings only on Windows.

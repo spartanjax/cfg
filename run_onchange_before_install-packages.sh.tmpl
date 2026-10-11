@@ -6,6 +6,7 @@ brew bundle --file={{ joinPath .chezmoi.sourceDir "Brewfile" | quote }}
 {{ else if eq .chezmoi.os "linux" -}}
 #!/bin/sh
 # Debian/Ubuntu packages. Runs again when this list changes.
+# bc + gawk are used by the tokyo-night-tmux status widgets.
 sudo apt-get update
-sudo apt-get install -y tmux ripgrep fzf fd-find bat jq tree
+sudo apt-get install -y tmux ripgrep fzf fd-find bat jq tree bc gawk
 {{ end -}}
