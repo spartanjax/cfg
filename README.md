@@ -18,6 +18,7 @@ attributes:
 | `dot_zshrc`                                    | `~/.zshrc` (macOS only)                        |
 | `dot_tmux.conf`                                | `~/.tmux.conf` (Linux/WSL + macOS)             |
 | `dot_local/bin/executable_jf-*`                | `~/.local/bin/jf-*` (Linux/WSL + macOS)        |
+| `OneDrive/Documents/…/Microsoft.PowerShell_profile.ps1` | Windows PowerShell `$PROFILE`          |
 | `Brewfile`                                     | *not applied* — macOS package list             |
 
 - `dot_` prefix → leading dot in the destination path.
@@ -36,6 +37,13 @@ attributes:
 
 Day-to-day: edit a file (`chezmoi edit ~/.gitconfig`), then `jf-push`. On another
 machine, `jf-pull`.
+
+On **Windows** these are PowerShell functions in `$PROFILE` (both Windows
+PowerShell 5.1 and PowerShell 7) that forward to the WSL implementations:
+`function jf-push { wsl.exe -e bash -lc … }`. So they behave identically in a
+Windows terminal — they just run inside WSL. The `$PROFILE` path here is under
+`OneDrive\Documents`; on a Windows machine where Documents is *not* redirected,
+adjust the source path accordingly.
 
 ## Packages
 
