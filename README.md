@@ -74,12 +74,16 @@ chezmoi state delete-bucket --bucket=scriptState   # run_once_
 The tmux bar and the Windows Terminal scheme draw **Nerd Font** glyphs. Install
 [JetBrainsMono Nerd Font](https://www.nerdfonts.com/) (v3+) once per machine:
 
-- **Windows:** `winget install DEVCOM.JetBrainsMonoNerdFont`
-- **macOS:** `brew install --cask font-jetbrains-mono-nerd-font`
+- **Windows:** `winget install DEVCOM.JetBrainsMonoNerdFont` — registers the
+  families `JetBrainsMono NF` / `NFM` / `NFP`. Windows Terminal uses
+  **`JetBrainsMono NFM`** (the single-width "Mono" variant, best for the tmux
+  status bar).
+- **macOS:** `brew install --cask font-jetbrains-mono-nerd-font` — family
+  `JetBrainsMono Nerd Font Mono`. Point your terminal app at it.
 
-Windows Terminal already points at `JetBrainsMono Nerd Font` and the `Tokyo
-Night` scheme (both in the managed `settings.json`). The font is a system
-install, so chezmoi does not manage it.
+Windows Terminal already points at `JetBrainsMono NFM` and the `Tokyo Night`
+scheme (both in the managed `settings.json`). The font is a system install, so
+chezmoi does not manage it.
 
 ## New machine
 
