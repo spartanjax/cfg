@@ -2,12 +2,15 @@
 # jf-push — commit and push the current dotfiles state.
 #
 # Usage:
-#   jf-push                 # let chezmoi add/commit/push
-#   jf-push "my message"    # use a custom commit message
+#   jf-push                 # commit with a default message
+#   jf-push "my message"    # commit with a custom message
 set -e
-if [ "$#" -eq 0 ]; then
-    exec chezmoi push
+src="$(chezmoi source-path)"
+msg="${*:-chore: update dotfiles}"
+git -C "$src" add -A
+if git -C "$src" diff --cached --quiet; then
+    echo "jf-push: nothing to commit"
+else
+    git -C "$src" commit -m "$msg"
 fi
-chezmoi git add -A
-chezmoi git commit -m "$*"
-chezmoi git push
+git -C "$src" push
