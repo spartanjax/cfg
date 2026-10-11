@@ -3,9 +3,12 @@ README.md
 .gitattributes
 .gitignore
 
-# The jf-* wrappers are POSIX shell scripts; only apply them on Linux/WSL.
 {{ if eq .chezmoi.os "windows" }}
+# POSIX shell wrappers: only apply them on Linux/WSL.
 .local/bin/jf-config
 .local/bin/jf-pull
 .local/bin/jf-push
+{{ else }}
+# Windows-only configs.
+AppData/Local/Packages/Microsoft.WindowsTerminal_8wekyb3d8bbwe/LocalState/settings.json
 {{ end }}
