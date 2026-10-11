@@ -1,0 +1,7 @@
+#!/bin/sh
+# jf-config — apply the jf-config dotfiles to this machine.
+#
+# Safe to run any time: it makes $HOME match the repo (destinations are
+# updated, existing real files are handled by chezmoi's normal diff/backup).
+set -e
+exec chezmoi apply "$@"

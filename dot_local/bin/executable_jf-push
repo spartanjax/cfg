@@ -1,0 +1,13 @@
+#!/bin/sh
+# jf-push — commit and push the current dotfiles state.
+#
+# Usage:
+#   jf-push                 # let chezmoi add/commit/push
+#   jf-push "my message"    # use a custom commit message
+set -e
+if [ "$#" -eq 0 ]; then
+    exec chezmoi push
+fi
+chezmoi git add -A
+chezmoi git commit -m "$*"
+chezmoi git push

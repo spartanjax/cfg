@@ -1,0 +1,17 @@
+# Rendered by `chezmoi init` into ~/.config/chezmoi/chezmoi.toml
+#
+# The age *recipient* below is a public key and is safe to commit. The matching
+# private identity lives at ~/.config/chezmoi/key.txt, is per-machine, and is
+# NEVER committed.
+encryption = "age"
+
+[age]
+    identity = {{ joinPath .chezmoi.homeDir ".config" "chezmoi" "key.txt" | quote }}
+    recipient = "age1xydscefzfau6eq2398ndprz93hf4dky322q6hlwr67q7n9qmkcjqxg7d6d"
+
+# Per-machine data used by templates. These are the home defaults; edit the
+# generated ~/.config/chezmoi/chezmoi.toml on a work machine to override them
+# without changing the shared repo.
+[data]
+    name = "Jackson"
+    email = "jacksonqfontaine@gmail.com"

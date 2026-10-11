@@ -1,0 +1,8 @@
+# Local secrets / state that must never be committed.
+key.txt
+*.key
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
