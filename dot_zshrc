@@ -9,3 +9,6 @@ fi
 
 # User-local binaries (jf-* wrappers, etc.).
 export PATH="$HOME/.local/bin:$PATH"
+
+# Shared shell aliases (git shortcuts, `oc`, …).
+[ -f "$HOME/.config/shell/aliases.sh" ] && . "$HOME/.config/shell/aliases.sh"

@@ -14,6 +14,7 @@ attributes:
 | `dot_config/opencode/agents/*.md`              | `~/.config/opencode/agents/*.md`               |
 | `dot_config/opencode/encrypted_service.json.age` | `~/.config/opencode/service.json` (decrypted)  |
 | `dot_gitconfig.tmpl`                           | `~/.gitconfig` (templated)                     |
+| `dot_config/shell/aliases.sh`                  | `~/.config/shell/aliases.sh` (sourced by bash/zsh) |
 | `dot_bashrc`                                   | `~/.bashrc` (Linux/WSL only)                   |
 | `dot_zshrc`                                    | `~/.zshrc` (macOS only)                        |
 | `dot_tmux.conf`                                | `~/.tmux.conf` (Linux/WSL + macOS)             |
@@ -44,6 +45,36 @@ PowerShell 5.1 and PowerShell 7) that forward to the WSL implementations:
 Windows terminal — they just run inside WSL. The `$PROFILE` path here is under
 `OneDrive\Documents`; on a Windows machine where Documents is *not* redirected,
 adjust the source path accordingly.
+
+## Aliases
+
+Shared POSIX aliases live in `dot_config/shell/aliases.sh` (→
+`~/.config/shell/aliases.sh`) and are sourced by both `~/.bashrc` and
+`~/.zshrc`, so they are identical on Linux/WSL and macOS:
+
+| Alias   | Runs                                   |
+| ------- | -------------------------------------- |
+| `oc`    | `opencode`                             |
+| `gpf`   | `git push --force-with-lease`          |
+| `gsw`   | `git switch`                           |
+| `gpl`   | `git pull`                             |
+| `gp`    | `git push`                             |
+| `gst`   | `git status`                           |
+| `gco`   | `git checkout`                         |
+| `gcm`   | `git commit -m`                        |
+| `gd`    | `git diff`                             |
+| `gl`    | `git log --oneline --graph --decorate` |
+| `gb`    | `git branch`                           |
+
+Git-level aliases live in `dot_gitconfig.tmpl` and work in every shell
+(including Windows), because git reads its own config:
+
+| Alias        | Runs                                       |
+| ------------ | ------------------------------------------ |
+| `git recent` | 20 most recently committed local branches  |
+
+On **Windows** the same shortcuts exist as PowerShell functions in `$PROFILE`
+(`oc`, `gpf`, …); `git recent` needs no wrapper — it comes from `~/.gitconfig`.
 
 ## Packages
 
@@ -122,5 +153,5 @@ defaults — it is not part of the repo.
   the UI. After a UI change run `chezmoi re-add` then `jf-push` to capture it;
   otherwise `jf-config` will overwrite it with the repo version.
 - **Shell rc files** are copied (not symlinked). `~/.bashrc` was captured from
-  the original; the repo version adds `~/.local/bin` to `PATH` and `fd`/`bat`
-  aliases.
+  the original; the repo version adds `~/.local/bin` to `PATH`, aliases
+  `fd`/`bat`, and sources the shared `~/.config/shell/aliases.sh`.

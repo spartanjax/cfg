@@ -10,6 +10,7 @@ Brewfile
 .local/bin/jf-pull
 .local/bin/jf-push
 .tmux.conf
+.config/shell
 {{ else }}
 # Windows-only configs.
 AppData

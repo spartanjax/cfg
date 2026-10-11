@@ -7,3 +7,6 @@
 
 [pull]
 	rebase = true
+
+[alias]
+	recent = for-each-ref --sort=-committerdate --count=20 --format='%(committerdate:relative)%09%(refname:short)' refs/heads/

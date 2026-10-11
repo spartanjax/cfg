@@ -127,3 +127,6 @@ export PATH
 # Debian/Ubuntu ship these under different names; provide the canonical ones.
 command -v fd  >/dev/null 2>&1 || { command -v fdfind >/dev/null 2>&1 && alias fd='fdfind'; }
 command -v bat >/dev/null 2>&1 || { command -v batcat  >/dev/null 2>&1 && alias bat='batcat'; }
+
+# Shared shell aliases (git shortcuts, `oc`, …).
+[ -f "$HOME/.config/shell/aliases.sh" ] && . "$HOME/.config/shell/aliases.sh"
