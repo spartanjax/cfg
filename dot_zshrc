@@ -7,8 +7,8 @@ elif [ -x /usr/local/bin/brew ]; then
     eval "$(/usr/local/bin/brew shellenv)"
 fi
 
-# User-local binaries (cfg-* wrappers, etc.).
-export PATH="$HOME/.local/bin:$PATH"
+# User-local binaries (cfg-* wrappers, etc.) and opencode.
+export PATH="$HOME/.local/bin:$HOME/.opencode/bin:$PATH"
 
 # Shared shell aliases (git shortcuts, `oc`, …).
 [ -f "$HOME/.config/shell/aliases.sh" ] && . "$HOME/.config/shell/aliases.sh"

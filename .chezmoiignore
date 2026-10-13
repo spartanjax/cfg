@@ -1,5 +1,6 @@
 # Files that live in the repo but must NOT be copied into $HOME.
 README.md
+bootstrap.sh
 .gitattributes
 .gitignore
 Brewfile

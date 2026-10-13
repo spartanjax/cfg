@@ -13,7 +13,7 @@ attributes:
 | `dot_config/opencode/opencode.json`            | `~/.config/opencode/opencode.json`             |
 | `dot_config/opencode/AGENTS.md`                | `~/.config/opencode/AGENTS.md` (global instructions) |
 | `dot_config/opencode/agents/*.md`              | `~/.config/opencode/agents/*.md`               |
-| `dot_config/opencode/encrypted_service.json.age` | `~/.config/opencode/service.json` (decrypted)  |
+| `dot_config/opencode/encrypted_private_service.json.age` | `~/.config/opencode/private_service.json` (decrypted) |
 | `dot_gitconfig.tmpl`                           | `~/.gitconfig` (templated)                     |
 | `dot_config/shell/aliases.sh`                  | `~/.config/shell/aliases.sh` (sourced by bash/zsh) |
 | `dot_bashrc`                                   | `~/.bashrc` (Linux/WSL only)                   |
@@ -22,6 +22,7 @@ attributes:
 | `dot_local/bin/executable_cfg-*`                | `~/.local/bin/cfg-*` (Linux/WSL + macOS)        |
 | `OneDrive/Documents/…/Microsoft.PowerShell_profile.ps1` | Windows PowerShell `$PROFILE`          |
 | `Brewfile`                                     | *not applied* — macOS package list             |
+| `bootstrap.sh`                                 | *not applied* — one-line new-machine setup      |
 | `.env.example`                                 | *not applied* — template for the local `.env`  |
 
 - `dot_` prefix → leading dot in the destination path.
@@ -119,6 +120,29 @@ scheme (both in the managed `settings.json`). The font is a system install, so
 chezmoi does not manage it.
 
 ## New machine
+
+### One-line bootstrap (macOS, Linux/WSL)
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/spartanjax/cfg/main/bootstrap.sh | sh
+```
+
+`bootstrap.sh` installs the **prerequisites only** — Homebrew on macOS, then
+git, curl, chezmoi and opencode — clones the repo, and applies it. Everything
+else (tmux, ripgrep, fzf, …) is installed by the repo's `run_` scripts during
+the apply. Pass the age key so the sealed secret can be decrypted:
+
+```sh
+CFG_AGE_KEY="$(cat ~/key.txt)" sh -c \
+  "$(curl -fsSL https://raw.githubusercontent.com/spartanjax/cfg/main/bootstrap.sh)"
+```
+
+`CFG_AGE_KEY` may be the `AGE-SECRET-KEY-1…` text itself or a path to a key
+file. With no key, the sealed secret is skipped and a warning is printed.
+`CFG_REPO` overrides the clone URL (default: SSH, falling back to HTTPS).
+The script is idempotent — re-run it any time.
+
+### Manual / Windows
 
 1. Install chezmoi — Windows `winget install twpayne.chezmoi`; Linux/WSL/macOS
    `sh -c "$(curl -fsSL get.chezmoi.io)" -- -b "$HOME/.local/bin"`.
