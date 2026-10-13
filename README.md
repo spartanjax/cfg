@@ -1,4 +1,4 @@
-# jf-config
+# cfg
 
 My dotfiles, managed with [chezmoi](https://chezmoi.io), across **Windows**,
 **WSL/Linux** and **macOS**. One source of truth, applied to every machine.
@@ -19,9 +19,10 @@ attributes:
 | `dot_bashrc`                                   | `~/.bashrc` (Linux/WSL only)                   |
 | `dot_zshrc`                                    | `~/.zshrc` (macOS only)                        |
 | `dot_tmux.conf`                                | `~/.tmux.conf` (Linux/WSL + macOS)             |
-| `dot_local/bin/executable_jf-*`                | `~/.local/bin/jf-*` (Linux/WSL + macOS)        |
+| `dot_local/bin/executable_cfg-*`                | `~/.local/bin/cfg-*` (Linux/WSL + macOS)        |
 | `OneDrive/Documents/…/Microsoft.PowerShell_profile.ps1` | Windows PowerShell `$PROFILE`          |
 | `Brewfile`                                     | *not applied* — macOS package list             |
+| `.env.example`                                 | *not applied* — template for the local `.env`  |
 
 - `dot_` prefix → leading dot in the destination path.
 - `executable_` prefix → destination is made executable.
@@ -33,16 +34,16 @@ attributes:
 
 | Command     | Does                                                       |
 | ----------- | ---------------------------------------------------------- |
-| `jf-config` | Apply the repo to this machine (`chezmoi apply`)           |
-| `jf-pull`   | Pull latest changes and apply them (`chezmoi update`)      |
-| `jf-push`   | Commit and push local changes (`chezmoi push`)             |
+| `cfg-apply` | Apply the repo to this machine (`chezmoi apply`)           |
+| `cfg-pull`   | Pull latest changes and apply them (`chezmoi update`)      |
+| `cfg-push`   | Commit and push local changes (`chezmoi push`)             |
 
-Day-to-day: edit a file (`chezmoi edit ~/.gitconfig`), then `jf-push`. On another
-machine, `jf-pull`.
+Day-to-day: edit a file (`chezmoi edit ~/.gitconfig`), then `cfg-push`. On another
+machine, `cfg-pull`.
 
 On **Windows** these are PowerShell functions in `$PROFILE` (both Windows
 PowerShell 5.1 and PowerShell 7) that forward to the WSL implementations:
-`function jf-push { wsl.exe -e bash -lc … }`. So they behave identically in a
+`function cfg-push { wsl.exe -e bash -lc … }`. So they behave identically in a
 Windows terminal — they just run inside WSL. The `$PROFILE` path here is under
 `OneDrive\Documents`; on a Windows machine where Documents is *not* redirected,
 adjust the source path accordingly.
@@ -93,7 +94,7 @@ The tmux bar is themed with
 tmux-resurrect / continuum / yank / fzf — all configured in `dot_tmux.conf`.
 
 `run_onchange_` re-runs only when its content changes — so **edit the package
-list** (or the `Brewfile`) and the next `jf-config`/`jf-pull` reinstalls.
+list** (or the `Brewfile`) and the next `cfg-apply`/`cfg-pull` reinstalls.
 `run_once_` runs a single time. To force a re-run:
 
 ```
@@ -125,7 +126,7 @@ chezmoi does not manage it.
    your SSH key if you want git-over-SSH.
 3. Apply (this also installs packages and tmux plugins):
    ```
-   chezmoi init --apply --ssh git@github.com:spartanjax/jf-config.git
+   chezmoi init --apply --ssh git@github.com:spartanjax/cfg.git
    ```
 4. Install the Nerd Font (see *Terminal appearance* above).
 
@@ -142,6 +143,22 @@ recipient is public and lives in `.chezmoi.toml.tmpl`. The private identity is
 - The private key must be copied to each new machine (e.g. from your password
   manager) before `chezmoi apply` can decrypt secrets.
 
+### Local-only secrets (`.env`)
+
+Machine-only tokens that should never be committed or synced live in `.env` at
+the repo root. It is git-ignored (`.env`, `.env.*`) and chezmoi never applies it —
+chezmoi ignores any source file whose name starts with `.` — so it stays on this
+machine.
+
+```sh
+cp .env.example .env && chmod 600 .env   # once, then edit in your tokens
+set -a; . ./.env; set +a                 # load into the current shell
+```
+
+Use this only for throwaway/local values. Anything needed on every machine
+belongs in an `encrypted_*.age` file above; GitHub tokens are best left to
+`gh auth login`.
+
 ## Per-machine values
 
 `~/.config/chezmoi/chezmoi.toml` is generated on each machine and holds that
@@ -151,8 +168,8 @@ defaults — it is not part of the repo.
 ## Editing notes
 
 - **Windows Terminal** rewrites its `settings.json` when you change settings in
-  the UI. After a UI change run `chezmoi re-add` then `jf-push` to capture it;
-  otherwise `jf-config` will overwrite it with the repo version.
+  the UI. After a UI change run `chezmoi re-add` then `cfg-push` to capture it;
+  otherwise `cfg-apply` will overwrite it with the repo version.
 - **Shell rc files** are copied (not symlinked). `~/.bashrc` was captured from
   the original; the repo version adds `~/.local/bin` to `PATH`, aliases
   `fd`/`bat`, and sources the shared `~/.config/shell/aliases.sh`.

@@ -1,15 +1,15 @@
 #!/bin/sh
-# jf-push — commit and push the current dotfiles state.
+# cfg-push — commit and push the current dotfiles state.
 #
 # Usage:
-#   jf-push                 # commit with a default message
-#   jf-push "my message"    # commit with a custom message
+#   cfg-push                 # commit with a default message
+#   cfg-push "my message"    # commit with a custom message
 set -e
 src="$(chezmoi source-path)"
 msg="${*:-chore: update dotfiles}"
 git -C "$src" add -A
 if git -C "$src" diff --cached --quiet; then
-    echo "jf-push: nothing to commit"
+    echo "cfg-push: nothing to commit"
 else
     git -C "$src" commit -m "$msg"
 fi

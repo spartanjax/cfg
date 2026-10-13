@@ -1,4 +1,4 @@
-# ~/.config/shell/aliases.sh — managed by jf-config (chezmoi).
+# ~/.config/shell/aliases.sh — managed by cfg (chezmoi).
 #
 # Shared POSIX aliases, sourced by ~/.bashrc (Linux/WSL) and ~/.zshrc (macOS).
 # Keep this file POSIX-compatible so both shells can read it. Windows PowerShell

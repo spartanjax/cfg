@@ -1,4 +1,10 @@
 # Local secrets / state that must never be committed.
+# Per-machine, local-only environment (see README "Secrets").
+# The committed `.env.example` template stays tracked.
+.env
+.env.*
+!.env.example
+
 key.txt
 *.key
 

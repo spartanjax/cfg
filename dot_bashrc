@@ -116,8 +116,8 @@ if ! shopt -oq posix; then
   fi
 fi
 
-# --- jf-config additions -------------------------------------------------
-# User-local binaries (jf-* wrappers, etc.) on PATH.
+# --- cfg additions -------------------------------------------------
+# User-local binaries (cfg-* wrappers, etc.) on PATH.
 case ":$PATH:" in
     *":$HOME/.local/bin:"*) ;;
     *) PATH="$HOME/.local/bin:$PATH" ;;

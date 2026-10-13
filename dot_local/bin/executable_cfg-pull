@@ -1,0 +1,4 @@
+#!/bin/sh
+# cfg-pull — pull the latest dotfiles and apply them to this machine.
+set -e
+exec chezmoi update "$@"

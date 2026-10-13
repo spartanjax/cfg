@@ -1,18 +1,18 @@
 # Microsoft.PowerShell_profile.ps1
 #
-# Managed by jf-config (chezmoi). On a synced machine don't edit here by hand:
+# Managed by cfg (chezmoi). On a synced machine don't edit here by hand:
 # edit the repo, or run `chezmoi re-add` after a local change.
 #
-# Windows wrappers for the jf-* helpers. The real implementations are POSIX
+# Windows wrappers for the cfg-* helpers. The real implementations are POSIX
 # shell scripts inside WSL (dot_local/bin/), so these functions just forward to
 # them. They use a login shell (`bash -lc`) so ~/.local/bin is on PATH, and
 # single-quote each argument for bash so spaces/apostrophes survive wsl.exe.
 #
-#   jf-config             chezmoi apply
-#   jf-pull               chezmoi update
-#   jf-push ["message"]   commit + push
+#   cfg-apply             chezmoi apply
+#   cfg-pull               chezmoi update
+#   cfg-push ["message"]   commit + push
 
-function ConvertTo-JfCommand {
+function ConvertTo-CfgCommand {
     param(
         [Parameter(Mandatory)][string]$Name,
         [string[]]$Arguments
@@ -21,6 +21,6 @@ function ConvertTo-JfCommand {
     (@($Name) + $quoted) -join ' '
 }
 
-function jf-config { wsl.exe -e bash -lc (ConvertTo-JfCommand 'jf-config' $args) }
-function jf-pull   { wsl.exe -e bash -lc (ConvertTo-JfCommand 'jf-pull'   $args) }
-function jf-push   { wsl.exe -e bash -lc (ConvertTo-JfCommand 'jf-push'   $args) }
+function cfg-apply { wsl.exe -e bash -lc (ConvertTo-CfgCommand 'cfg-apply' $args) }
+function cfg-pull   { wsl.exe -e bash -lc (ConvertTo-CfgCommand 'cfg-pull'   $args) }
+function cfg-push   { wsl.exe -e bash -lc (ConvertTo-CfgCommand 'cfg-push'   $args) }

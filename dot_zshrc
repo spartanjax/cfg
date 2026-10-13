@@ -1,4 +1,4 @@
-# ~/.zshrc — managed by jf-config (chezmoi). macOS only.
+# ~/.zshrc — managed by cfg (chezmoi). macOS only.
 
 # Homebrew on PATH (Apple Silicon: /opt/homebrew, Intel: /usr/local).
 if [ -x /opt/homebrew/bin/brew ]; then
@@ -7,7 +7,7 @@ elif [ -x /usr/local/bin/brew ]; then
     eval "$(/usr/local/bin/brew shellenv)"
 fi
 
-# User-local binaries (jf-* wrappers, etc.).
+# User-local binaries (cfg-* wrappers, etc.).
 export PATH="$HOME/.local/bin:$PATH"
 
 # Shared shell aliases (git shortcuts, `oc`, …).

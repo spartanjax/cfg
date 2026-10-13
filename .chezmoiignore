@@ -3,12 +3,14 @@ README.md
 .gitattributes
 .gitignore
 Brewfile
+.env
+.env.example
 
 {{ if eq .chezmoi.os "windows" }}
 # POSIX scripts/wrappers and tmux: only apply on Linux/WSL/macOS.
-.local/bin/jf-config
-.local/bin/jf-pull
-.local/bin/jf-push
+.local/bin/cfg-apply
+.local/bin/cfg-pull
+.local/bin/cfg-push
 .tmux.conf
 .config/shell
 {{ else }}
