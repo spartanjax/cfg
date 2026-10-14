@@ -93,14 +93,31 @@ if ! have chezmoi; then
 fi
 
 # --- opencode --------------------------------------------------------------
+# Use the OpenCode 2 installer. The legacy https://opencode.ai/install endpoint
+# installs the frozen v1 line (1.19.x); v2 is the current release and is served
+# from https://opencode.ai/v2/install.
+#
 # --no-modify-path: the shell rc files are managed by chezmoi and would
 # clobber the PATH line opencode would add. The cfg dotfiles already put
 # ~/.opencode/bin on PATH.
-if ! have opencode; then
-    log "Installing opencode..."
-    curl -fsSL https://opencode.ai/install | bash -s -- --no-modify-path \
+opencode_major() {
+    v="$(opencode --version 2>/dev/null | tr -d '\r' | awk '{print $NF}')"
+    v="${v#v}"
+    printf '%s\n' "${v%%.*}"
+}
+
+if have opencode && [ "$(opencode_major)" = "2" ]; then
+    log "opencode v2 already installed; skipping."
+else
+    if have opencode; then
+        log "Upgrading opencode to the latest v2..."
+    else
+        log "Installing opencode (v2)..."
+    fi
+    curl -fsSL https://opencode.ai/v2/install | bash -s -- --no-modify-path \
         || die "opencode installation failed"
-    have opencode || warn "opencode installed to ~/.opencode/bin; start a new shell"
+    have opencode || die "opencode installed to ~/.opencode/bin but not on PATH"
+    log "opencode $(opencode --version 2>/dev/null | tr -d '\r') installed"
 fi
 
 # --- age key (secrets) -----------------------------------------------------

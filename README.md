@@ -86,9 +86,14 @@ Installed by scripts that `chezmoi apply` runs (skipped on Windows):
 | Script                                          | Machine   | Does                                |
 | ----------------------------------------------- | --------- | ----------------------------------- |
 | `run_once_before_install-homebrew.sh.tmpl`      | macOS     | installs Homebrew if missing        |
-| `run_onchange_before_install-packages.sh.tmpl`  | macOS     | `brew bundle` from `Brewfile`       |
-| `run_onchange_before_install-packages.sh.tmpl`  | Linux/WSL | `apt-get install` the CLI set       |
+| `run_onchange_after_install-packages.sh.tmpl`   | macOS     | `brew bundle` from `Brewfile`       |
+| `run_onchange_after_install-packages.sh.tmpl`   | Linux/WSL | `apt-get install` the CLI set       |
 | `run_onchange_after_tpm-install.sh.tmpl`        | both      | installs TPM + tmux plugins         |
+
+Package installs are `after_` scripts so chezmoi lays down the managed files
+(including the `~/.zshrc`/`~/.bashrc` `PATH` that exposes `opencode` and the
+`cfg-*` wrappers) *before* Homebrew/apt runs. A slow or failed package step can
+no longer leave a fresh machine without a working shell.
 
 The tmux bar is themed with
 [tokyo-night-tmux](https://github.com/janoamaral/tokyo-night-tmux) and includes

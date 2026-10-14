@@ -1,0 +1,29 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/sh
+# macOS packages. Runs again when the Brewfile (or this list) changes.
+#
+# This is an *_after_* script on purpose: chezmoi applies all managed files
+# before it runs, so the PATH in ~/.zshrc (which makes `opencode` and the
+# cfg-* wrappers findable) is already in place before Homebrew starts. A slow
+# `brew bundle` can therefore no longer block a fresh machine from getting a
+# working shell.
+# Brewfile hash: {{ include "Brewfile" | sha256sum }}
+
+# Keep Homebrew unattended: no interactive prompts, no slow auto-update, no
+# post-install cleanup. Without HOMEBREW_NO_AUTO_UPDATE a fresh `brew bundle`
+# first runs a full `brew update`, which is what makes a first-time install
+# appear to hang for many minutes.
+export NONINTERACTIVE=1
+export HOMEBREW_NO_AUTO_UPDATE=1
+export HOMEBREW_NO_ANALYTICS=1
+export HOMEBREW_NO_INSTALL_CLEANUP=1
+
+echo "==> Installing Homebrew packages (this can take a few minutes on a fresh machine)..."
+brew bundle --file={{ joinPath .chezmoi.sourceDir "Brewfile" | quote }}
+{{ else if eq .chezmoi.os "linux" -}}
+#!/bin/sh
+# Debian/Ubuntu packages. Runs again when this list changes.
+# bc + gawk are used by the tokyo-night-tmux status widgets.
+sudo apt-get update
+sudo apt-get install -y tmux ripgrep fzf fd-find bat jq tree bc gawk
+{{ end -}}
