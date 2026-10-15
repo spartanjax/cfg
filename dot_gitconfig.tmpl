@@ -10,3 +10,21 @@
 
 [alias]
 	recent = for-each-ref --sort=-committerdate --count=20 --format='%(committerdate:relative)%09%(refname:short)' refs/heads/
+
+	# Shortcuts. Live here (not in the shell) so they work in every shell,
+	# including Windows PowerShell. See README "Aliases".
+	ga     = add .
+	gp     = push
+	gpl    = pull
+	gpf    = push --force-with-lease
+	gfa    = fetch --all --prune
+	gcl    = clone
+	gcm    = commit -m
+	gd     = diff
+	gl     = log --oneline --graph --decorate
+	gb     = branch
+	gst    = status -sb
+	gco    = checkout
+	gsw    = switch
+	gprev  = switch -
+	grh    = reset --hard

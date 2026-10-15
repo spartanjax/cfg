@@ -51,33 +51,54 @@ adjust the source path accordingly.
 
 ## Aliases
 
-Shared POSIX aliases live in `dot_config/shell/aliases.sh` (→
+**Git shortcuts** live in `dot_gitconfig.tmpl` (`[alias]`) and so work in *every*
+shell — Linux/WSL, macOS and Windows PowerShell — because git reads its own
+config. Invoke them as `git <name>` (e.g. `git gpf`):
+
+| Alias        | Runs                                     |
+| ------------ | ---------------------------------------- |
+| `git recent` | 20 most recently committed local branches |
+| `git ga`     | `git add .`                              |
+| `git gp`     | `git push`                               |
+| `git gpl`    | `git pull`                               |
+| `git gpf`    | `git push --force-with-lease`            |
+| `git gfa`    | `git fetch --all --prune`                |
+| `git gcl`    | `git clone`                              |
+| `git gcm`    | `git commit -m`                          |
+| `git gd`     | `git diff`                               |
+| `git gl`     | `git log --oneline --graph --decorate`   |
+| `git gb`     | `git branch`                             |
+| `git gst`    | `git status -sb`                         |
+| `git gco`    | `git checkout`                           |
+| `git gsw`    | `git switch`                             |
+| `git gprev`  | `git switch -`                           |
+| `git grh`    | `git reset --hard`                       |
+
+**Shared POSIX aliases** live in `dot_config/shell/aliases.sh` (→
 `~/.config/shell/aliases.sh`) and are sourced by both `~/.bashrc` and
 `~/.zshrc`, so they are identical on Linux/WSL and macOS:
 
-| Alias   | Runs                                   |
-| ------- | -------------------------------------- |
-| `oc`    | `opencode`                             |
-| `gpf`   | `git push --force-with-lease`          |
-| `gsw`   | `git switch`                           |
-| `gpl`   | `git pull`                             |
-| `gp`    | `git push`                             |
-| `gst`   | `git status`                           |
-| `gco`   | `git checkout`                         |
-| `gcm`   | `git commit -m`                        |
-| `gd`    | `git diff`                             |
-| `gl`    | `git log --oneline --graph --decorate` |
-| `gb`    | `git branch`                           |
+| Alias       | Runs                                   |
+| ----------- | -------------------------------------- |
+| `oc`        | `opencode`                             |
+| `c`         | `code .`                               |
+| `g`         | `git`                                  |
+| `..` `...` `....` | parent directories               |
+| `cfg`       | `cd ~/git/cfg`                         |
+| `cdg`       | `cd` to the current git repo root      |
+| `openhere`  | open CWD in Explorer/Finder/`xdg-open` |
+| `h`         | `history \| tail -n 30`                |
+| `dfh` `dus` `freeh` | `df -h`, `du -sh`, `free -h`    |
+| `ports`     | `ss -tulpn`                            |
+| `myip`      | public IP via ifconfig.me              |
+| `serve`     | `python3 -m http.server`               |
+| `psg`       | `ps aux \| grep` for a process name    |
+| `t` `tl` `ta` `tn` `tk` | tmux: run/list/attach/new/kill-session |
+| `td` `tks` `tkw` | tmux: detach/kill-server/kill-window |
+| `treload`   | `tmux source-file ~/.tmux.conf`        |
 
-Git-level aliases live in `dot_gitconfig.tmpl` and work in every shell
-(including Windows), because git reads its own config:
-
-| Alias        | Runs                                       |
-| ------------ | ------------------------------------------ |
-| `git recent` | 20 most recently committed local branches  |
-
-On **Windows** the same shortcuts exist as PowerShell functions in `$PROFILE`
-(`oc`, `gpf`, …); `git recent` needs no wrapper — it comes from `~/.gitconfig`.
+On **Windows** only `oc` is a PowerShell function in `$PROFILE`; the git
+shortcuts need no wrapper — they come from `~/.gitconfig`.
 
 ## Packages
 

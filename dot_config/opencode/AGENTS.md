@@ -25,6 +25,6 @@ Applies to every project. Keep responses concise and token-efficient.
 ## Build gate
 For any non-trivial build task:
 1. Ask questions until 100% sure of scope.
-2. Then summarize: changes, affected files, expected lines added/removed, estimated token cost.
+2. Then summarize: changes, affected files, expected lines added/removed, estimated cost for full completion.
 3. End with exactly: `Ready to Proceed :P`
 Only build after I confirm.
