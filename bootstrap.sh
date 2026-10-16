@@ -11,9 +11,9 @@
 #   - chezmoi
 #   - opencode
 #
-# Then it clones the cfg repo and applies it. Everything the dotfiles need
-# (tmux, ripgrep, fzf, …) is installed by the repo's own run_ scripts during
-# the apply, so it is not duplicated here.
+# Then it clones the cfg repo to ~/git/cfg and applies it. Everything the
+# dotfiles need (tmux, ripgrep, fzf, …) is installed by the repo's own run_
+# scripts during the apply, so it is not duplicated here.
 #
 # Environment overrides:
 #   CFG_REPO        git URL to clone (default: SSH, falling back to HTTPS)
@@ -28,7 +28,9 @@ set -u
 REPO_SSH="git@github.com:spartanjax/cfg.git"
 REPO_HTTPS="https://github.com/spartanjax/cfg.git"
 KEYFILE="$HOME/.config/chezmoi/key.txt"
-SRC="$HOME/.local/share/chezmoi"
+# Canonical source tree on every machine. .chezmoi.toml.tmpl pins sourceDir to
+# this same path, so chezmoi and this script always agree on where the repo is.
+SRC="$HOME/git/cfg"
 
 log()  { printf '\033[1;34m==>\033[0m %s\n' "$*"; }
 warn() { printf '\033[1;33mwarning:\033[0m %s\n' "$*" >&2; }
@@ -149,12 +151,25 @@ fi
 log "Using repo: $repo"
 
 # --- clone/update + apply --------------------------------------------------
+# chezmoi's sourceDir is pinned by .chezmoi.toml.tmpl to the same $SRC, so the
+# clone below and chezmoi never disagree about where the repo lives.
+mkdir -p "$(dirname "$SRC")"
 if [ -d "$SRC/.git" ]; then
     log "Updating existing chezmoi source..."
     git -C "$SRC" pull --ff-only || warn "git pull failed; continuing with local state"
+elif [ -e "$SRC" ]; then
+    die "$SRC exists but is not a git clone; move it aside, then re-run"
 else
-    log "Cloning dotfiles with chezmoi..."
-    chezmoi init "$repo" || die "chezmoi init failed"
+    log "Cloning dotfiles into $SRC..."
+    git clone "$repo" "$SRC" || die "git clone failed"
+fi
+
+# Render ~/.config/chezmoi/chezmoi.toml, which also pins sourceDir. --source is
+# required here because the config that would point chezmoi at the source tree
+# does not exist yet on a fresh machine.
+if [ ! -f "$HOME/.config/chezmoi/chezmoi.toml" ]; then
+    log "Writing chezmoi config..."
+    chezmoi --source "$SRC" init || die "chezmoi init failed"
 fi
 
 if [ "$have_key" = true ]; then

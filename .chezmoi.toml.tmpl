@@ -3,6 +3,12 @@
 # The age *recipient* below is a public key and is safe to commit. The matching
 # private identity lives at ~/.config/chezmoi/key.txt, is per-machine, and is
 # NEVER committed.
+#
+# The repo is cloned here on every machine. Pinning sourceDir in the generated
+# config stops `chezmoi init` from putting the source tree anywhere else — which
+# is how a second, stale clone ends up being the one that actually gets applied.
+sourceDir = {{ joinPath .chezmoi.homeDir "git" "cfg" | quote }}
+
 encryption = "age"
 
 [age]

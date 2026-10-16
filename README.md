@@ -42,9 +42,9 @@ attributes:
 Day-to-day: edit a file (`chezmoi edit ~/.gitconfig`), then `cfg-push`. On another
 machine, `cfg-pull`.
 
-The source tree chezmoi actually applies lives at `$(chezmoi source-path)`
-(normally `~/.local/share/chezmoi`) — edit **there**, or use `chezmoi edit`.
-Keep a single clone: a second checkout elsewhere is *not* what gets applied.
+The source tree chezmoi applies is `~/git/cfg` on every machine — pinned by
+`sourceDir` in `.chezmoi.toml.tmpl`, so `chezmoi init` cannot put it anywhere
+else. Edit there (or `chezmoi edit <target>`), then `cfg-push`.
 
 On **Windows** these are PowerShell functions in `$PROFILE` (both Windows
 PowerShell 5.1 and PowerShell 7) that forward to the WSL implementations:
@@ -158,9 +158,9 @@ curl -fsSL https://raw.githubusercontent.com/spartanjax/cfg/main/bootstrap.sh | 
 ```
 
 `bootstrap.sh` installs the **prerequisites only** — Homebrew on macOS, then
-git, curl, chezmoi and opencode — clones the repo, and applies it. Everything
-else (tmux, ripgrep, fzf, …) is installed by the repo's `run_` scripts during
-the apply. Pass the age key so the sealed secret can be decrypted:
+git, curl, chezmoi and opencode — clones the repo to `~/git/cfg`, and applies
+it. Everything else (tmux, ripgrep, fzf, …) is installed by the repo's `run_`
+scripts during the apply. Pass the age key so the sealed secret can be decrypted:
 
 ```sh
 CFG_AGE_KEY="$(cat ~/key.txt)" sh -c \
@@ -178,9 +178,11 @@ The script is idempotent — re-run it any time.
    `sh -c "$(curl -fsSL get.chezmoi.io)" -- -b "$HOME/.local/bin"`.
 2. Restore your age identity to `~/.config/chezmoi/key.txt` (see *Secrets*), and
    your SSH key if you want git-over-SSH.
-3. Apply (this also installs packages and tmux plugins):
+3. Clone the source tree where `sourceDir` expects it — `~/git/cfg` on every
+   machine — then apply (this also installs packages and tmux plugins):
    ```
-   chezmoi init --apply --ssh git@github.com:spartanjax/cfg.git
+   git clone --depth 1 git@github.com:spartanjax/cfg.git ~/git/cfg
+   chezmoi --source ~/git/cfg init --apply
    ```
 4. Install the Nerd Font (see *Terminal appearance* above).
 
