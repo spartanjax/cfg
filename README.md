@@ -42,6 +42,10 @@ attributes:
 Day-to-day: edit a file (`chezmoi edit ~/.gitconfig`), then `cfg-push`. On another
 machine, `cfg-pull`.
 
+The source tree chezmoi actually applies lives at `$(chezmoi source-path)`
+(normally `~/.local/share/chezmoi`) — edit **there**, or use `chezmoi edit`.
+Keep a single clone: a second checkout elsewhere is *not* what gets applied.
+
 On **Windows** these are PowerShell functions in `$PROFILE` (both Windows
 PowerShell 5.1 and PowerShell 7) that forward to the WSL implementations:
 `function cfg-push { wsl.exe -e bash -lc … }`. So they behave identically in a
@@ -84,7 +88,7 @@ config. Invoke them as `git <name>` (e.g. `git gpf`):
 | `c`         | `code .`                               |
 | `g`         | `git`                                  |
 | `..` `...` `....` | parent directories               |
-| `cfg`       | `cd ~/git/cfg`                         |
+| `cfg`       | `cd $(chezmoi source-path)`            |
 | `cdg`       | `cd` to the current git repo root      |
 | `openhere`  | open CWD in Explorer/Finder/`xdg-open` |
 | `h`         | `history \| tail -n 30`                |
@@ -190,8 +194,14 @@ recipient is public and lives in `.chezmoi.toml.tmpl`. The private identity is
 `~/.config/chezmoi/key.txt` — it is per-machine and never committed.
 
 - Add a secret: `chezmoi add --encrypt ~/.config/opencode/service.json`
-- The private key must be copied to each new machine (e.g. from your password
-  manager) before `chezmoi apply` can decrypt secrets.
+- **Restore the key on a new machine:** write the identity
+  (`AGE-SECRET-KEY-1…`) to `~/.config/chezmoi/key.txt` and `chmod 600` it — or
+  pass it to `bootstrap.sh` as `CFG_AGE_KEY` (raw text or a path to the file).
+  Without it, `chezmoi apply`/`status` fail on every `encrypted_*.age` file; use
+  `chezmoi apply --exclude=encrypted` to apply everything else meanwhile.
+- **Verify** it matches this repo before relying on it:
+  `chezmoi age-keygen -y ~/.config/chezmoi/key.txt` must print the `recipient`
+  from `.chezmoi.toml.tmpl`.
 
 ### Local-only secrets (`.env`)
 

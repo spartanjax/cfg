@@ -15,7 +15,8 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 
 # --- Projects --------------------------------------------------------------
-alias cfg='cd ~/git/cfg'
+# Jump to the chezmoi source tree (the real one, wherever chezmoi keeps it).
+alias cfg='cd "$(chezmoi source-path)"'
 
 # cd to the root of the current git repository.
 cdg() {
